@@ -1,5 +1,7 @@
 Include
 Lib
 Scripts
-pyvenv
+pyvenv.cfg
 config.toml
+etc
+share

@@ -1,2 +1,2 @@
 # ProjetoIntegradorV_SatisfacaoTweets
- Projeto de satisfação sobre alvo com base em tweets
+Projeto que mede a satisfação dos comentarios de videos do youtube!
