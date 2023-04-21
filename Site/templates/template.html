@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{ titulo }}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    </head>
+    <body>
+        <header class="menu-principal">
+            <main class="col100">
+            <div class="header-1">
+                <div class="logo">
+                    <a href="{{url_for('index')}}">
+                        <img src="{{ url_for('static', filename='img/logo-furia.webp') }}" alt="Logo do site"/>
+                    </a>
+                </div>
+                <div class="menu">
+                    <ul>
+                        <li>
+                            <a href="">
+                                <button>Sugestão</button>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url_for('sobre')}}">
+                                <button>Sobre</button>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <img class='sol' src="{{ url_for('static', filename='img/brilho-do-sol.png') }}">
+                            </a>
+                        </li>
+                    <ul>
+                </div>
+            </div>
+            </main>
+        </header>
+        <div class="container">
+            {% block conteudo %}{% endblock %}
+        </div>
+        <footer>
+            <p>Projeto universitario - UNISAL</p>
+            <p>Copyright@</p>
+        </footer>
+    </body>
+</html>

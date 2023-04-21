@@ -1,0 +1,8 @@
+{% extends "template.html" %}
+{% block conteudo %}
+    <h1>Youtube</h1>
+        <form method="POST" action="{{ url_for('youtube') }}">
+            <input placeholder="Insira o link do Vídeo" type="text" class="form-control" type="text" name="link_video" required/>
+            <button type="submit" class="btn-pesquisar">Buscar</button>
+        </form>
+{% endblock %}
