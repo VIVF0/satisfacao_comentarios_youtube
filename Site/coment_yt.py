@@ -25,34 +25,13 @@ DEVELOPER_KEY = config['DEVELOPER_KEY']
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
-#nltk.download("all")
-token_pontuacao = tokenize.WordPunctTokenizer()
-
-palavras_irrelevantes = nltk.corpus.stopwords.words("portuguese")
-
-pontuacao = list()
-for ponto in punctuation:
-    pontuacao.append(ponto)
-
-pontuacao_stopwords = pontuacao + palavras_irrelevantes
-
 #Carrega Modelo:
 model = pickle.load(open("lrModel", "rb"))
 vectorizer = pickle.load(open("vectorizer", "rb"))
 
-def tratamento(text):
-    frase_processada = list()
-    for opiniao in text:
-        nova_frase = list()
-        palavras_texto = token_pontuacao.tokenize(opiniao)
-        for palavra in palavras_texto:
-            if palavra not in pontuacao_stopwords:
-                nova_frase.append(palavra)
-        frase_processada.append(' '.join(nova_frase))
-    return frase_processada
-
+from tratamento import trata
 def classifica_tweet(text):
-    test_vectors = vectorizer.transform(tratamento(text))
+    test_vectors = vectorizer.transform(trata(text))
     return model.predict(test_vectors)
 
 def get_comment_threads(youtube, video_id, nextPageToken):
@@ -155,6 +134,6 @@ def youtube():
     print(df["sentimento"].value_counts().get('Negativo', 0))
     print(positivo)
     print(df["sentimento"].value_counts().get('Positivo', 0))'''
-    return render_template('resultado_pesquisa.html', titulo='Resultado',negativo=negativo,positivo=positivo)
+    return render_template('resultado_pesquisa.html', titulo='Resultado',negativo=negativo,positivo=positivo,video_id=link_video)
 
 server.run(debug=True)
