@@ -1,8 +1,4 @@
 import pickle
-from nltk.corpus import stopwords
-import nltk
-from nltk import tokenize
-from string import punctuation
 import os
 import pandas as pd
 from urllib.parse import urlparse, parse_qs
@@ -29,11 +25,13 @@ os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 model = pickle.load(open("lrModel", "rb"))
 vectorizer = pickle.load(open("vectorizer", "rb"))
 
+#trata o texto e classifica o texto
 from tratamento import trata
 def classifica_tweet(text):
     test_vectors = vectorizer.transform(trata(text))
     return model.predict(test_vectors)
 
+#Puxa comentarios do vídio do youtube
 def get_comment_threads(youtube, video_id, nextPageToken):
     results = youtube.commentThreads().list(
         part="snippet",
@@ -44,6 +42,7 @@ def get_comment_threads(youtube, video_id, nextPageToken):
     ).execute()
     return results
 
+#Classifica comentarios do youtube em Negativo (0) e Positivo(1)
 def video_youtube(video_id):
     youtube = googleapiclient.discovery.build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey = DEVELOPER_KEY)
     comments = get_comment_threads(youtube, video_id, '')
@@ -57,10 +56,10 @@ def video_youtube(video_id):
             resposta='Negativo' 
         else: 
             resposta='Positivo'
-        data.append({'texto': frase, 'sentimento': resposta})
-        #print(f'Texto: {frase}\nSentimento: {resposta}\n\n')
+        data.append({'texto': trata(frase), 'sentimento': resposta})
     return data  
 
+#pega o ID do video do youtube pela url do video
 def id_video(link_video):
     parsed_url = urlparse(link_video)
     query_params = parse_qs(parsed_url.query)
@@ -73,6 +72,7 @@ server = Flask(__name__)
 server.secret_key = 'youtube_comment'
 app = dash.Dash(__name__, server=server, routes_pathname_prefix='/dash/')
 
+#Gerar Grafico
 app.layout = html.Div([
     dcc.Store(id='data-store'),
     dcc.Graph(id='pie-chart'),
@@ -113,6 +113,7 @@ def update_graph(grafico):
 def data():
     return jsonify(grafico)
 
+#Home Page
 @server.route('/')
 def index():
     return render_template('index.html', titulo='Home')
@@ -121,19 +122,21 @@ def index():
 def sobre():
     return render_template('sobre.html', titulo='Sobre')
 
+#Pagina Resultado
 @server.route('/youtube', methods=['POST',])
 def youtube():
-    link_video=id_video(request.form['link_video'])
-    video_data = video_youtube(link_video)
-    df = pd.DataFrame(video_data)
-    negativo = df["sentimento"].value_counts().get('Negativo', 0)
-    positivo = df["sentimento"].value_counts().get('Positivo', 0)
-    grafico['values'] = [int(negativo), int(positivo)]
-    grafico['labels'] = ['Negativo', 'Positivo']
-    '''print(negativo)
-    print(df["sentimento"].value_counts().get('Negativo', 0))
-    print(positivo)
-    print(df["sentimento"].value_counts().get('Positivo', 0))'''
-    return render_template('resultado_pesquisa.html', titulo='Resultado',negativo=negativo,positivo=positivo,video_id=link_video)
+    try:
+        link_video=id_video(request.form['link_video'])
+        video_data = video_youtube(link_video)
+        df = pd.DataFrame(video_data)
+        negativo = df["sentimento"].value_counts().get('Negativo', 0)
+        positivo = df["sentimento"].value_counts().get('Positivo', 0)
+        #Atualiza variavel global que tem os detalhes do gráfico:
+        grafico['values'] = [int(negativo), int(positivo)]
+        grafico['labels'] = ['Negativo', 'Positivo']
+        return render_template('resultado_pesquisa.html', titulo='Resultado',negativo=negativo,positivo=positivo,video_id=link_video)
+    except:
+        #Mensagem de Erro, caso o usuario insira algo invalido
+        return render_template('index.html', titulo='Home',erro='Erro na Leitura do ID')
 
 server.run(debug=True)

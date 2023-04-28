@@ -2,6 +2,11 @@ import unidecode
 import nltk
 from nltk import tokenize
 from string import punctuation
+import re
+
+def remove_emoticons(text):
+    emoticon_pattern = r'[:;=][\-\^]?[\)\(DPp@#$&|]'
+    return re.sub(emoticon_pattern, '', text)
 
 def trata(resenha):
     #nltk.download("all")
@@ -23,7 +28,7 @@ def trata(resenha):
     frase_processada = []
     for opiniao in resenha:
         nova_frase = []
-        opiniao = opiniao.lower()
+        opiniao = remove_emoticons(opiniao.lower())
         palavras_texto = token_pontuacao.tokenize(opiniao)
         for palavra in palavras_texto:
             if palavra not in stopwords_sem_acento:
