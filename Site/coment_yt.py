@@ -32,31 +32,55 @@ def classifica_tweet(text):
     return model.predict(test_vectors)
 
 #Puxa comentarios do vídio do youtube
-def get_comment_threads(youtube, video_id, nextPageToken):
-    results = youtube.commentThreads().list(
-        part="snippet",
-        maxResults=6000,
-        videoId=video_id,
-        textFormat="plainText",
-        pageToken = nextPageToken
-    ).execute()
-    return results
+def get_video_comments(youtube,video_id):
+    try:
+        comments = []
+        # Primeira solicitação para obter os comentários principais
+        results = youtube.commentThreads().list(
+            part='snippet',
+            videoId=video_id,
+            textFormat='plainText',
+            maxResults=100
+        ).execute()
+
+        # Percorre todas as páginas de resultados
+        while results:
+            for item in results['items']:
+                comment = item['snippet']['topLevelComment']['snippet']['textDisplay']
+                comments.append(comment)
+
+            # Verifica se há mais páginas de resultados
+            if 'nextPageToken' in results:
+                next_page_token = results['nextPageToken']
+                results = youtube.commentThreads().list(
+                    part='snippet',
+                    videoId=video_id,
+                    textFormat='plainText',
+                    maxResults=100,
+                    pageToken=next_page_token
+                ).execute()
+            else:
+                break
+
+        return comments
+
+    except HttpError as e:
+        print('Erro ao recuperar os comentários:', e)
+        return None
 
 #Classifica comentarios do youtube em Negativo (0) e Positivo(1)
 def video_youtube(video_id):
     youtube = googleapiclient.discovery.build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey = DEVELOPER_KEY)
-    comments = get_comment_threads(youtube, video_id, '')
+    comments = get_video_comments(youtube, video_id)
     data = []
-    for item in comments["items"]:
-        comment = item["snippet"]["topLevelComment"]
-        text = comment["snippet"]["textDisplay"]
-        frase = [text]
+    for item in comments:
+        frase = [item]
         resposta = classifica_tweet(frase)
-        if resposta[0]==0: 
+        if resposta[0]==0:
             resposta='Negativo' 
         else: 
             resposta='Positivo'
-        data.append({'texto': trata(frase), 'sentimento': resposta})
+        data.append({'texto': frase, 'sentimento': resposta})
     return data  
 
 #pega o ID do video do youtube pela url do video
@@ -65,8 +89,8 @@ def id_video(link_video):
     query_params = parse_qs(parsed_url.query)
     video_id = query_params.get('v', [None])[0]
     return video_id
-   
-   
+
+
 grafico = {'values': [], 'labels': []}   
 server = Flask(__name__)
 server.secret_key = 'youtube_comment'
@@ -134,7 +158,7 @@ def youtube():
         #Atualiza variavel global que tem os detalhes do gráfico:
         grafico['values'] = [int(negativo), int(positivo)]
         grafico['labels'] = ['Negativo', 'Positivo']
-        return render_template('resultado_pesquisa.html', titulo='Resultado',negativo=negativo,positivo=positivo,video_id=link_video)
+        return render_template('resultado_pesquisa.html', titulo='Resultado',video_id=link_video)
     except:
         #Mensagem de Erro, caso o usuario insira algo invalido
         return render_template('index.html', titulo='Home',erro='Erro na Leitura do ID')
