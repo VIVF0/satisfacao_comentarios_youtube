@@ -3,7 +3,22 @@
     <h1>Youtube</h1>
         <form method="POST" action="{{ url_for('youtube') }}">
             <input placeholder="Insira o link do Vídeo" type="url" class="form-control" name="link_video" required/>
-            <button type="submit" class="btn-pesquisar">Buscar</button>
+            <button type="submit" id="btn-pesquisar" class="btn-pesquisar">Buscar</button>
         </form>
         <h3 style="color:red;">{{erro}}</h3>
+        <script>
+            $(document).ready(function() {
+                $('#btn-pesquisar').click(function() {
+                    $('#loader').show();
+                    $.ajax({
+                        url: '/process',
+                        type: 'POST',
+                        success: function(response) {
+                            $('#loader').hide();
+                            alert(response);
+                        }
+                    });
+                });
+            });
+        </script>
 {% endblock %}

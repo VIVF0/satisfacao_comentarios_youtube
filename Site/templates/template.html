@@ -1,13 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="dark">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{{ titulo }}</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
     <body>
+        <div id="loader">
+            <h2>Carregando...</h2>
+        </div>
         <header class="menu-principal">
             <main class="col100">
             <div class="header-1">
@@ -24,9 +28,8 @@
                             </a>
                         </li>
                         <li>
-                            <a href="">
-                                <img class='sol' src="{{ url_for('static', filename='img/brilho-do-sol.png') }}">
-                            </a>
+                            <input type="checkbox" id="myCheckbox" />
+                            <label for="myCheckbox" class="checkbox-label"></label>
                         </li>
                     <ul>
                 </div>
@@ -40,5 +43,31 @@
             <p>Projeto universitario - UNISAL</p>
             <p>Copyright@</p>
         </footer>
+        <script>
+            $(document).ready(function() {
+                let themeToggler = document.getElementById("myCheckbox");
+                themeToggler.addEventListener("click", () => {
+                    let targetTheme;
+                    let currentTheme = document.documentElement.getAttribute("data-theme");
+                    if (currentTheme === "dark") {
+                        targetTheme = "light";
+                    } else {
+                        targetTheme = "dark";
+                    }
+                    document.documentElement.setAttribute("data-theme", targetTheme);
+                    localStorage.setItem("theme", targetTheme);
+                });
+    
+                let savedTheme = localStorage.getItem("theme");
+                if (savedTheme) {
+                    document.documentElement.setAttribute("data-theme", savedTheme);
+                } else {
+                    let browserTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+                        ? "light"
+                        : "dark";
+                    document.documentElement.setAttribute("data-theme", browserTheme);
+                }
+            });
+        </script>
     </body>
 </html>
