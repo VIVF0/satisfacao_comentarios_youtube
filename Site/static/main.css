@@ -3,7 +3,7 @@ html[data-theme="dark"]{
     --header-background-color: #333;
     --header-title-color: write;
     --header-subtitle-color: #969696;
-    --link-color: #0000ee;
+    --link-color: white;
     --text-color: white;
     --url_img:url('img/brilho-do-sol.png');
 }
@@ -13,7 +13,7 @@ html[data-theme="light"] {
     --header-background-color: #e3e3e3;
     --header-title-color: #333333;
     --header-subtitle-color: #969696;
-    --link-color: #0000ee;
+    --link-color: white;
     --divider-color: #006064;
     --text-color: #000000;
     --url_img:url('img/lua-crescente.png');
@@ -26,25 +26,58 @@ body {
     color: var(--text-color);
 }
 
-ul {
-    padding: 0px!important;
+ul li {
+    padding: 0px !important;
+    color: #fff;
+    font-size: 15px;
+    text-align: center;
+    display: inline;
 }
 
-.menu-principal {
-    width: 100%;
-    background-color: #333;
-    margin: 0 auto;
-    height: 90px;
+a:hover {
+    color: rgb(172, 170, 170);
+}
+
+a:active {
+    color: white;
+}
+
+a {
+    color: white;
+}
+
+nav {
+    position: fixed;
+    text-align: center;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.navbar {
     display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
+    background-color: #333;
+    height: 90px;
 }
 
-main {
-    margin: 0 auto;
-    max-width: 1280px;
+input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-label{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    cursor: pointer;
+    background-image: var(--url_img);
+}
+
+.menu {
     width: 100%;
+    max-width: 1280px;
 }
 
 .logo {
@@ -55,29 +88,6 @@ main {
     width: 5rem;
     height: 5rem;
 }
-
-.menu {
-    width: 90%;
-    text-align: right;
-}
-
-.menu ul {
-    margin: 0;
-    padding: 0;
-}
-
-.menu ul li {
-    display: inline-block;
-    margin-left: 20px;
-}
-
-.menu ul li a {
-    color: #FFFFFF;
-    text-decoration: none;
-    font-size: 25px;
-    text-transform: uppercase;
-}
-
 
 #loader {
     display: none;
@@ -117,8 +127,11 @@ button:hover {
     font-size: 16px;
     line-height: 1.5;
     color: var(--text-color);
+    text-align: justify;
+}
+h1 texto{
     text-align: center;
- }
+}
 
 .btn-pesquisar {
     background-color: #919292;

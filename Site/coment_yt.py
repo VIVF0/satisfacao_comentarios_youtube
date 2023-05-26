@@ -6,18 +6,17 @@ import googleapiclient
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from flask import Flask, render_template, request, redirect, session, flash, url_for,jsonify
-import toml
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
+from dotenv import load_dotenv
 
-with open('config.toml', 'r') as file:
-    config = toml.load(file)
+load_dotenv()
 
 YOUTUBE_API_SERVICE_NAME = 'youtube'
 YOUTUBE_API_VERSION = 'v3'
-DEVELOPER_KEY = config['DEVELOPER_KEY']
+DEVELOPER_KEY =  os.getenv('DEVELOPER_KEY')
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 

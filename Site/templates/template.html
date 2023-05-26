@@ -6,40 +6,37 @@
         <title>{{ titulo }}</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+        <link rel="icon" href="{{ url_for('static', filename='img/logo_senttube.png') }}">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
     <body>
         <div id="loader">
             <h2>Carregando...</h2>
         </div>
-        <header class="menu-principal">
-            <main class="col100">
-            <div class="header-1">
-                <div class="logo">
-                    <a href="{{url_for('index')}}">
+        <nav class="navbar bg-dark navbar-expand-lg">
+            <div class="container-fluid menu">
+                    <a class="navbar-brand" href="{{url_for('index')}}">
                         <img class='img_logo' src="{{ url_for('static', filename='img/logo_senttube.png') }}" alt="Logo do site"/>
                     </a>
-                </div>
-                <div class="menu">
-                    <ul>
-                        <li>
-                            <a href="{{url_for('sobre')}}">
-                                <button>Sobre</button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="navbar-brand" href="{{url_for('sobre')}}">
+                                Sobre
                             </a>
                         </li>
-                        <li>
-                            <input type="checkbox" id="myCheckbox" />
+                        <li class="nav-item navbar-brand">
+                            <input type="checkbox" id="myCheckbox"/>
                             <label for="myCheckbox" class="checkbox-label"></label>
                         </li>
                     <ul>
                 </div>
             </div>
-            </main>
-        </header>
+        </nav>
         <div class="container">
             {% block conteudo %}{% endblock %}
         </div>
-        <footer>
+        <footer class='bg-dark'>
             <p>Projeto universitario - UNISAL</p>
             <p>Copyright@</p>
         </footer>
