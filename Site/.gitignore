@@ -1,9 +1,3 @@
-Include
-Lib
-Scripts
-pyvenv.cfg
-config.toml
-etc
-share
-SITE
+__pycache__
+venv
 .env

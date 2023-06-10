@@ -3,13 +3,13 @@ import nltk
 from nltk import tokenize
 from string import punctuation
 import re
+#nltk.download("all")
 
 def remove_emoticons(text):
     emoticon_pattern = r'[:;=][\-\^]?[\)\(DPp@#$&|]'
     return re.sub(emoticon_pattern, '', text)
 
 def trata(resenha):
-    #nltk.download("all")
     # Tokenizadores
     #token_espaco = tokenize.WhitespaceTokenizer()
     token_pontuacao = tokenize.WordPunctTokenizer()
