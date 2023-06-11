@@ -16,8 +16,8 @@ DEVELOPER_KEY =  os.getenv('DEVELOPER_KEY')
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 #Carrega Modelo:
-model = pickle.load(open("lrModel", "rb"))
-vectorizer = pickle.load(open("vectorizer", "rb"))
+model = pickle.load(open("AI/lrModel", "rb"))
+vectorizer = pickle.load(open("AI/vectorizer", "rb"))
 
 #trata o texto e classifica o texto
 from tratamento import trata
