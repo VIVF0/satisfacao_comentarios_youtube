@@ -61,16 +61,16 @@ def sobre():
 #Pagina Resultado
 @server.route('/youtube', methods=['POST',])
 def youtube():
-    #try:
-    link_video=id_video(request.form['link_video'])
-    video_data = video_youtube(link_video)
-    df = pd.DataFrame(video_data)
-    negativo = df["sentimento"].value_counts().get('Negativo', 0)
-    positivo = df["sentimento"].value_counts().get('Positivo', 0)
-    #Atualiza variavel global que tem os detalhes do gráfico:
-    grafico['values'] = [int(negativo), int(positivo)]
-    grafico['labels'] = ['Negativo', 'Positivo']
-    return render_template('resultado_pesquisa.html', titulo='Resultado',video_id=link_video)
-    #except:
+    try:
+        link_video=id_video(request.form['link_video'])
+        video_data = video_youtube(link_video)
+        df = pd.DataFrame(video_data)
+        negativo = df["sentimento"].value_counts().get('Negativo', 0)
+        positivo = df["sentimento"].value_counts().get('Positivo', 0)
+        #Atualiza variavel global que tem os detalhes do gráfico:
+        grafico['values'] = [int(negativo), int(positivo)]
+        grafico['labels'] = ['Negativo', 'Positivo']
+        return render_template('resultado_pesquisa.html', titulo='Resultado',video_id=link_video)
+    except:
         #Mensagem de Erro, caso o usuario insira algo invalido
-     #   return render_template('index.html', titulo='Home',erro='Erro na Leitura do ID')
+        return render_template('index.html', titulo='Home',erro='Erro na Leitura do ID')
