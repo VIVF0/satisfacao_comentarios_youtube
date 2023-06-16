@@ -5,6 +5,13 @@ from string import punctuation
 import re
 #nltk.download("all")
 
+from __init__ import model,vectorizer
+
+
+def classifica_tweet(text):
+    test_vectors = vectorizer.transform(trata(text))
+    return model.predict(test_vectors)
+
 def remove_emoticons(text):
     emoticon_pattern = r'[:;=][\-\^]?[\)\(DPp@#$&|]'
     return re.sub(emoticon_pattern, '', text)
@@ -50,4 +57,4 @@ def trata(resenha):
 
     # Retornando o texto processado
     resenha = frase_processada
-    return resenha
+    return resenha 

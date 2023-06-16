@@ -2,9 +2,9 @@ from flask import Flask, render_template, request, redirect, session, flash, url
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
-import pandas as pd
+
 from app import app,server
-from helpers import *
+from src import Video
 
 grafico = {'values': [], 'labels': []}  
 
@@ -49,7 +49,6 @@ def update_graph(grafico):
 def data():
     return jsonify(grafico)
 
-#Home Page
 @server.route('/')
 def index():
     return render_template('index.html', titulo='Home')
@@ -58,19 +57,15 @@ def index():
 def sobre():
     return render_template('sobre.html', titulo='Sobre')
 
-#Pagina Resultado
 @server.route('/youtube', methods=['POST',])
 def youtube():
     try:
-        link_video=id_video(request.form['link_video'])
-        video_data = video_youtube(link_video)
-        df = pd.DataFrame(video_data)
-        negativo = df["sentimento"].value_counts().get('Negativo', 0)
-        positivo = df["sentimento"].value_counts().get('Positivo', 0)
-        #Atualiza variavel global que tem os detalhes do gráfico:
+        video = Video(request.form['link_video'])
+        negativo = video.sentimento_negativo()
+        positivo = video.sentimento_positivo()
         grafico['values'] = [int(negativo), int(positivo)]
         grafico['labels'] = ['Negativo', 'Positivo']
-        return render_template('resultado_pesquisa.html', titulo='Resultado',video_id=link_video)
+        return render_template('resultado_pesquisa.html', titulo='Resultado', video_id=video.id)
     except:
         #Mensagem de Erro, caso o usuario insira algo invalido
         return render_template('index.html', titulo='Home',erro='Erro na Leitura do ID')
