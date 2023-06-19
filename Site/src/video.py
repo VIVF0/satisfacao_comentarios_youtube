@@ -4,6 +4,8 @@ from googleapiclient.errors import HttpError
 from urllib.parse import urlparse, parse_qs
 import pandas as pd 
 
+import pathlib
+import time
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -13,21 +15,28 @@ DEVELOPER_KEY =  os.getenv('DEVELOPER_KEY')
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 youtube = googleapiclient.discovery.build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey = DEVELOPER_KEY)
-
+def id(link):
+    parsed_url = urlparse(link)
+    query_params = parse_qs(parsed_url.query)
+    id_video = query_params.get('v', [None])[0]
+    return id_video
 from tools import *
 class Video:
-    def __init__(self, link_video):
-        self.link_video = link_video
-        self.id_video = self.id
+    def __init__(self, link_video=None,id_video=None):
+        if link_video is None:
+            self.id_video = id_video
+        else:
+            self.id_video= id(link_video)
         self.comentarios_youtube = self.get_video_comments()
         self.dataset = self.video_youtube()
-
+    
     @property
-    def id(self):
-        parsed_url = urlparse(self.link_video)
-        query_params = parse_qs(parsed_url.query)
-        id_video = query_params.get('v', [None])[0]
-        return id_video
+    def dataset_csv(self):
+        return self.dataset
+    
+    def save_csv(self):
+        time_now = int(time.time())
+        self.dataset.to_csv(f'csv/{time_now}{self.id_video}.csv', encoding = 'utf-8',sep =';')
 
     def sentimento_positivo(self):
         return self.dataset["sentimento"].value_counts().get('Positivo', 0)
@@ -44,7 +53,7 @@ class Video:
                 resposta = 'Negativo'
             else:
                 resposta = 'Positivo'
-            data.append({'texto': frase, 'sentimento': resposta})
+            data.append({'texto': str(frase), 'sentimento': resposta})
         return pd.DataFrame(data)
 
     def get_video_comments(self):
@@ -79,4 +88,12 @@ class Video:
             return comments
         except HttpError as e:
             print('Erro ao recuperar os comentários:', e)
+            return None
+    
+    def get_file_path(self):
+        directory=pathlib.Path('csv')
+        arquivo = list(directory.glob(f'*{self.id_video}.csv'))
+        if arquivo:
+            return str(arquivo[0])
+        else:
             return None

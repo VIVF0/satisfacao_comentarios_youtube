@@ -1,6 +1,10 @@
 {% extends "template.html" %}
 {% block conteudo %}
 <br>
+    <form method="GET" action="{{ url_for('download', id=video_id) }}">
+        <button type="submit" id="btn-download" class="btn-pesquisar">Baixar</button>
+    </form>
+
     <center><iframe width="560" height="315" src="https://www.youtube.com/embed/{{ video_id }}" frameborder="0" allowfullscreen></iframe><center>
     <iframe src="/dash" width="100%" height="700px"></iframe>
 {% endblock %}
