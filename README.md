@@ -31,7 +31,7 @@ Para executar o projeto, siga as etapas abaixo:
 
 Clone o repositório para sua máquina local:
 ```
-git clone https://github.com/VIVF0/satisfacao_comentarios_youtube
+git clone https://github.com/VIVF0/satisfacao_comentarios_youtube.git
 ```
 Instale as dependências necessárias para a IA e o site:
 ```
