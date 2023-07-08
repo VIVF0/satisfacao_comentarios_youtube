@@ -15,20 +15,19 @@ DEVELOPER_KEY =  os.getenv('DEVELOPER_KEY')
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 youtube = googleapiclient.discovery.build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey = DEVELOPER_KEY)
-def id(link):
-    parsed_url = urlparse(link)
-    query_params = parse_qs(parsed_url.query)
-    id_video = query_params.get('v', [None])[0]
-    return id_video
+    
 from tools import *
 class Video:
     def __init__(self, link_video=None,id_video=None):
-        if link_video is None:
-            self.id_video = id_video
-        else:
-            self.id_video= id(link_video)
+        self.id_video = id_video if id_video is not None else self.extrai_id(link_video) 
         self.comentarios_youtube = self.get_video_comments()
         self.dataset = self.video_youtube()
+    
+    def extrai_id(self,value):
+        parsed_url = urlparse(value)
+        query_params = parse_qs(parsed_url.query)
+        id_video = query_params.get('v', [None])[0]
+        return id_video
     
     @property
     def dataset_csv(self):
