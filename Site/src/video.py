@@ -16,12 +16,18 @@ os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 youtube = googleapiclient.discovery.build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey = DEVELOPER_KEY)
     
-from tools import *
+from tools import classifica_texto
+
+import threading
 class Video:
     def __init__(self, link_video=None,id_video=None):
-        self.id_video = id_video if id_video is not None else self.extrai_id(link_video) 
-        self.comentarios_youtube = self.get_video_comments()
+        self.id_video = id_video if id_video is not None else self.extrai_id(link_video)
+        start_time = time.time()
+        self.comentarios_youtube_array1, self.comentarios_youtube_array2 = self.get_video_comments()
         self.dataset = self.video_youtube()
+        end_time = time.time()
+        execution_time = end_time - start_time
+        print(f"Execution time: {execution_time} seconds")
     
     def extrai_id(self,value):
         parsed_url = urlparse(value)
@@ -45,14 +51,28 @@ class Video:
 
     def video_youtube(self):
         data = []
-        for item in self.comentarios_youtube:
-            frase = [item]
-            resposta = classifica_tweet(frase)
-            if resposta[0] == 0:
-                resposta = 'Negativo'
-            else:
-                resposta = 'Positivo'
-            data.append({'texto': str(frase), 'sentimento': resposta})
+        def processar_comentarios(comentarios):
+            for item in comentarios:
+                frase = [item]
+                resposta = classifica_texto(frase)
+                if resposta[0] == 0:
+                    resposta = 'Negativo'
+                else:
+                    resposta = 'Positivo'
+                data.append({'texto': str(frase), 'sentimento': resposta})
+        
+        t1 = threading.Thread(target=processar_comentarios, args=(self.comentarios_youtube_array1,))
+        t2 = threading.Thread(target=processar_comentarios, args=(self.comentarios_youtube_array2,))
+        
+        t1.start()
+        t2.start()
+        
+        t1.join()
+        t2.join()
+        
+        #processar_comentarios(self.comentarios_youtube_array1)
+        #processar_comentarios(self.comentarios_youtube_array2)
+        
         return pd.DataFrame(data)
 
     def get_video_comments(self):
@@ -84,7 +104,8 @@ class Video:
                     ).execute()
                 else:
                     break
-            return comments
+            lenght_comments = int(len(comments)/2)
+            return comments[:lenght_comments], comments[lenght_comments:]
         except HttpError as e:
             print('Erro ao recuperar os comentários:', e)
             return None

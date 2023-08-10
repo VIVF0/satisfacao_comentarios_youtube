@@ -8,7 +8,7 @@ import re
 from __init__ import model,vectorizer
 
 
-def classifica_tweet(text):
+def classifica_texto(text):
     test_vectors = vectorizer.transform(trata(text))
     return model.predict(test_vectors)
 

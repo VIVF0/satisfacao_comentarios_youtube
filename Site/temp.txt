@@ -1,0 +1,16 @@
+video - https://www.youtube.com/watch?v=sx4hAHhO9CY
+
+count comments - 1480
+
+With 2 Threads:
+Execution time: 15.456665992736816 seconds
+Execution time: 7.588134527206421 seconds
+Execution time: 8.743261814117432 seconds
+Execution time: 8.99305534362793 seconds 
+
+
+Without 2 Threads:
+Execution time: 10.166088342666626 seconds
+Execution time: 8.485946655273438 seconds
+Execution time: 10.53877568244934 seconds
+Execution time: 9.705195903778076 seconds
