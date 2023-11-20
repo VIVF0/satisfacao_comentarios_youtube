@@ -1,7 +1,10 @@
 # Classificador de Sentimentos de Comentarios do YouTube 
 ![GitHub](https://img.shields.io/github/license/VIVF0/satisfacao_comentarios_youtube)
 ![GitHub Repo Size](https://img.shields.io/github/repo-size/VIVF0/satisfacao_comentarios_youtube)
-![GitHub Last Commit](https://img.shields.io/github/last-commit/VIVF0/satisfacao_comentarios_youtube)
+![GitHub Last Commit](https://img.shields.io/github/last-commit/VIVF0/satisfacao_comentarios_youtube)  
+
+[![Watch the video](https://github.com/VIVF0/satisfacao_comentarios_youtube/blob/main/Site/capa.png)](https://youtu.be/r7o1pX0jLkQ)
+
 ### Análise de Sentimentos em Comentários do YouTube
 Este é um projeto que utiliza Python para implementar uma IA capaz de realizar análise de sentimentos em comentários do YouTube. O projeto é dividido em duas partes principais: a criação da IA e o desenvolvimento do backend do site.
 
